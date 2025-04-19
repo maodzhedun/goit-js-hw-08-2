@@ -2,20 +2,17 @@ import Player from '@vimeo/player';
 
 import throttle from 'lodash.throttle';
 
+const TIME_KEY = 'videoplayer-current-time';
+
 const iframe = document.querySelector('iframe');
 
 const player = new Player(iframe);
 
+player.on('timeupdate', throttle(onPlay, 1000));
 
-player.on('timeupdate', function () {
-  console.log('played the video!',);
+function onPlay(currentTime) {
+  localStorage.setItem(TIME_KEY, currentTime.seconds);
+}
 
-  // let currentTime = getCurrentTime();
-  console.log(currentTime.seconds)
-});
-
-
-
-// player.getVideoTitle().then(function (title) {
-//   console.log('title:', title);
-// });
+const playerTime = localStorage.getItem(TIME_KEY);
+player.setCurrentTime(playerTime);
